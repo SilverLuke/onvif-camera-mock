@@ -5,24 +5,23 @@ RUN apt install \
     flex bison byacc make m4 autoconf unzip \
     git g++ wget -y
 
-RUN git clone https://github.com/IroN404/onvif-camera-mock && \
-    cd /onvif-camera-mock && \
-    cd wsdd && \
-    make release
+COPY . /onvif-camera-mock
 
-RUN cd /onvif-camera-mock && \
-    cd onvif_srvd && \
-    make release
+RUN cd /onvif-camera-mock/wsdd && make release
 
-FROM ubuntu:22.04
+RUN cd /onvif-camera-mock/onvif_srvd && make release
+
+FROM debian:bullseye-slim
 RUN apt update && \
-    apt install sudo iproute2 \
-    python3-gi \
-    libgstrtspserver-1.0-dev gstreamer1.0-rtsp \
+    apt install sudo iproute2 python3-gi libgstrtspserver-1.0-dev gstreamer1.0-rtsp \
     gstreamer1.0-rtsp gstreamer1.0-plugins-ugly  -y
 
-COPY --from=build /onvif-camera-mock /onvif-camera-mock
+COPY --from=build /onvif-camera-mock/onvif_srvd/onvif_srvd /onvif-camera-mock/onvif_srvd/onvif_srvd
+COPY --from=build /onvif-camera-mock/wsdd/wsdd /onvif-camera-mock/wsdd/wsdd
+COPY --from=build /onvif-camera-mock/main.py /onvif-camera-mock/main.py
+
 RUN chmod +x /onvif-camera-mock/main.py
+
 EXPOSE 8554
 EXPOSE 1000
 CMD ["/onvif-camera-mock/main.py", "eth0", "/onvif-camera-mock"]
