@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 as build
+FROM debian:bullseye-slim as build 
 WORKDIR /
 RUN apt update && apt upgrade -y
 RUN apt install \
@@ -14,7 +14,7 @@ RUN cd /onvif-camera-mock/onvif_srvd && make release
 FROM debian:bullseye-slim
 RUN apt update && \
     apt install sudo iproute2 python3-gi libgstrtspserver-1.0-dev gstreamer1.0-rtsp \
-    gstreamer1.0-rtsp gstreamer1.0-plugins-ugly  -y
+    gstreamer1.0-rtsp gstreamer1.0-plugins-ugly procps -y
 
 COPY --from=build /onvif-camera-mock/onvif_srvd/onvif_srvd /onvif-camera-mock/onvif_srvd/onvif_srvd
 COPY --from=build /onvif-camera-mock/wsdd/wsdd /onvif-camera-mock/wsdd/wsdd
