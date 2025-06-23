@@ -55,15 +55,15 @@ The build could take from 20 to 30 minutes.
 To deploy this project run
 
 ```bash
-  docker run -it -e INTERFACE=eth0 -p 8554:8554 -p 1000:1000 docker-build
+  docker run -it -e INTERFACE=eth0 -p 8554:8554 -p 1000:1000 onvif-build
 ```
 If you want to pass a custom mp4 file to the RTSP stream :
 ```bash
-  docker run -it -e INTERFACE=eth0 -e MP4=/home/file.mp4 -p 8554:8554 -p 1000:1000 docker-build
+  docker run -it -e INTERFACE=eth0 -e MP4=/home/file.mp4 -p 8554:8554 -p 1000:1000 onvif-build
 ```
 > After start you'll need to copy your MP4 file to the container, to do so, note the container id 
 >    ```bash
->        docker ps |grep onvif
+>        docker ps | grep onvif
 >    ```
 >Then copy 
 >    ```bash
